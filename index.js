@@ -4,12 +4,20 @@ import express from "express";
 import * as dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { MongoClient } from "mongodb";
+
+
 
 dotenv.config();
 
 const app = express();
 
 const PORT = 4000;
+
+const MONGO_URL = "mongodb://127.0.0.1";
+const client = new MongoClient(MONGO_URL);
+await client.connect();
+
 
 app.get("/", (request, response) => {
   response.send({ message: "Welcome to Demo Page" });
