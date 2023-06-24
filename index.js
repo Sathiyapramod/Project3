@@ -10,7 +10,7 @@ dotenv.config();
 const app = express();
 
 const PORT = 4000;
-
+app.use(express.json());
 const MONGO_URL = "mongodb://127.0.0.1";
 const client = new MongoClient(MONGO_URL);
 await client.connect();
@@ -27,8 +27,9 @@ async function Hashing(input) {
 }
 
 app.post("/signup", async (request, response) => {
-  const { username, password } = request.body;
-  if (username == null || password == null)
+  let { username, password } = request.body;
+  console.log(request.body);
+  if (username == undefined || password == undefined)
     response.status(401).send({ message: "Enter valid credentials 😮" });
   else {
     const hashedPassword = await Hashing(password);
@@ -40,8 +41,8 @@ app.post("/signup", async (request, response) => {
         password: hashedPassword,
       });
     newUserSignup
-      ? res.send({ message: "New User Registered Successfully" })
-      : res.status(401).send({ message: "failed to register user" });
+      ? response.send({ message: "New User Registered Successfully" })
+      : response.status(401).send({ message: "failed to register user" });
   }
 });
 
